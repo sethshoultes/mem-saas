@@ -1,12 +1,22 @@
 export interface User {
   id: string;
   email: string;
-  full_name: string;
-  role: 'admin' | 'tenant_admin' | 'user';
-  tenant_id: string;
-  status: 'active' | 'inactive' | 'suspended';
+  profile?: {
+    full_name: string;
+    role: 'admin' | 'tenant_admin' | 'user';
+    tenant_id: string | null;
+    status: 'active' | 'inactive' | 'suspended';
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+export interface UserActivity {
+  id: string;
+  user_id: string;
+  action: string;
+  details: Record<string, any>;
   created_at: string;
-  last_login: string;
 }
 
 export interface Tenant {
