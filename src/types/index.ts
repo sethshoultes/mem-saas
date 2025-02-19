@@ -117,7 +117,7 @@ export interface ContentAccess {
   created_at: string;
 }
 
-export interface DashboardStats {
+export interface DashboardMetrics {
   total_users: number;
   active_tenants: number;
   monthly_revenue: number;

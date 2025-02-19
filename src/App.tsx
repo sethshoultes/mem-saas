@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/layout/layout';
 import { UserList } from './components/users/UserList';
+import { Dashboard } from './components/dashboard/Dashboard';
 import { ResetPassword } from './components/auth/ResetPassword';
 import { Login } from './components/auth/Login';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -19,7 +20,7 @@ function App() {
               <div className="min-h-screen bg-gray-50">
                 <Layout>
                   <Routes>
-                    <Route path="/" element={<div>Dashboard Coming Soon</div>} />
+                    <Route path="/" element={<Dashboard />} />
                     <Route path="/users" element={<UserList />} />
                     <Route path="/tenants" element={<div>Tenants Coming Soon</div>} />
                     <Route path="/payments" element={<div>Payments Coming Soon</div>} />
