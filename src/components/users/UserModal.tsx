@@ -3,6 +3,7 @@ import { User } from '../../types';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
 import { signUp, updateUserProfile } from '../../lib/auth';
+import { TenantSelector } from './TenantSelector';
 
 interface UserModalProps {
   user?: User;
@@ -160,12 +161,10 @@ export function UserModal({ user, isOpen, onClose, onSuccess }: UserModalProps) 
             <label className="block text-sm font-medium text-gray-700">
               Tenant ID
             </label>
-            <input
-              type="text"
+            <TenantSelector
               className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               value={formData.tenantId}
-              onChange={(e) => setFormData({ ...formData, tenantId: e.target.value })}
-              placeholder="Optional"
+              onChange={(value) => setFormData({ ...formData, tenantId: value })}
             />
           </div>
 

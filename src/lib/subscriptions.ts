@@ -61,3 +61,47 @@ export async function processSubscriptionRenewal(subscriptionId: string) {
   if (error) throw error;
   return data;
 }
+
+export async function cancelSubscription(
+  subscriptionId: string,
+  immediate: boolean = false
+) {
+  const { data, error } = await supabase
+    .rpc('cancel_subscription', {
+      p_subscription_id: subscriptionId,
+      p_immediate: immediate
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function reactivateSubscription(subscriptionId: string) {
+  const { data, error } = await supabase
+    .rpc('reactivate_subscription', {
+      p_subscription_id: subscriptionId
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function retrySubscriptionPayment(subscriptionId: string) {
+  const { data, error } = await supabase
+    .rpc('retry_subscription_payment', {
+      p_subscription_id: subscriptionId
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function getSubscriptionDetails(subscriptionId: string) {
+  const { data, error } = await supabase
+    .rpc('get_subscription_details', {
+      p_subscription_id: subscriptionId
+    });
+
+  if (error) throw error;
+  return data;
+}

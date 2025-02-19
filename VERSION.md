@@ -1,5 +1,17 @@
 # Version History
 
+[2025-03-21] v0.9.1
+- Enhanced Subscription Management with cancellation, reactivation, and payment retry
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Subscription cancellation with immediate or end-of-period options
+- Subscription reactivation for canceled subscriptions
+- Payment retry mechanism for past due subscriptions
+- Detailed subscription history tracking
+- Enhanced activity logging for subscription events
+
 [2025-03-21] v0.9.0
 - Implemented Subscription Management with comprehensive subscription tracking
 - Type: Feature

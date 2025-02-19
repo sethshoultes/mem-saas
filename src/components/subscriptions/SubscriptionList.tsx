@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { Button } from '../ui/button';
 import { Search, Filter, CreditCard, AlertCircle } from 'lucide-react';
 import { formatDate, formatCurrency } from '../../lib/utils';
+import { cancelSubscription, reactivateSubscription, retrySubscriptionPayment } from '../../lib/subscriptions';
 
 interface Subscription {
   subscription_id: string;
@@ -158,9 +159,14 @@ export function SubscriptionList() {
                       <Button
                         variant="secondary"
                         size="sm"
-                        onClick={() => {
+                        onClick={async () => {
                           if (confirm('Are you sure you want to cancel this subscription?')) {
-                            // Handle cancellation
+                            try {
+                              await cancelSubscription(subscription.subscription_id);
+                              fetchSubscriptions();
+                            } catch (error) {
+                              console.error('Error canceling subscription:', error);
+                            }
                           }
                         }}
                       >
@@ -170,6 +176,14 @@ export function SubscriptionList() {
                       <Button
                         variant="danger"
                         size="sm"
+                        onClick={async () => {
+                          try {
+                            await retrySubscriptionPayment(subscription.subscription_id);
+                            fetchSubscriptions();
+                          } catch (error) {
+                            console.error('Error retrying payment:', error);
+                          }
+                        }}
                         className="inline-flex items-center"
                       >
                         <AlertCircle className="h-4 w-4 mr-1" />
@@ -179,6 +193,14 @@ export function SubscriptionList() {
                       <Button
                         variant="secondary"
                         size="sm"
+                        onClick={async () => {
+                          try {
+                            await reactivateSubscription(subscription.subscription_id);
+                            fetchSubscriptions();
+                          } catch (error) {
+                            console.error('Error reactivating subscription:', error);
+                          }
+                        }}
                         className="inline-flex items-center"
                       >
                         <CreditCard className="h-4 w-4 mr-1" />
