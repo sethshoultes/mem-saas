@@ -1,5 +1,17 @@
 # Version History
 
+[2025-03-21] v0.9.0
+- Implemented Subscription Management with comprehensive subscription tracking
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Subscription creation and management
+- Status tracking and renewal processing
+- Subscription list view with filtering
+- Cancellation and reactivation workflows
+- Activity logging for subscription events
+
 [2025-03-21] v0.8.0
 - Implemented Tenant Management UI with comprehensive tenant administration
 - Type: Feature

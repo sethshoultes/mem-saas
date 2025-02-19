@@ -5,6 +5,7 @@ import { UserList } from './components/users/UserList';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { TenantList } from './components/tenants/TenantList';
 import { MembershipList } from './components/membership/MembershipList';
+import { SubscriptionList } from './components/subscriptions/SubscriptionList';
 import { ResetPassword } from './components/auth/ResetPassword';
 import { Login } from './components/auth/Login';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -25,7 +26,8 @@ function App() {
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/users" element={<UserList />} />
                     <Route path="/tenants" element={<TenantList />} />
-                    <Route path="/memberships" element={<MembershipList />} />
+                    <Route path="/membership" element={<MembershipList />} />
+                    <Route path="/subscriptions" element={<SubscriptionList />} />
                     <Route path="/payments" element={<div>Payments Coming Soon</div>} />
                     <Route path="/settings" element={<div>Settings Coming Soon</div>} />
                     <Route path="/help" element={<div>Help Coming Soon</div>} />

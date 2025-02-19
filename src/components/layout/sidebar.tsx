@@ -2,7 +2,9 @@ import { Link, useLocation } from 'react-router-dom';
 import {
   BarChart3,
   Users,
+  Building2,
   Ticket,
+  Receipt,
   CreditCard,
   Settings,
   HelpCircle,
@@ -12,8 +14,9 @@ import { cn } from '../../lib/utils';
 const navigation = [
   { name: 'Dashboard', href: '/', icon: BarChart3 },
   { name: 'Users', href: '/users', icon: Users },
-  { name: 'Tenants', href: '/tenants', icon: Ticket },
+  { name: 'Tenants', href: '/tenants', icon: Building2 },
   { name: 'Membership', href: '/membership', icon: Ticket },
+  { name: 'Subscriptions', href: '/subscriptions', icon: Receipt },
   { name: 'Payments', href: '/payments', icon: CreditCard },
   { name: 'Settings', href: '/settings', icon: Settings },
   { name: 'Help', href: '/help', icon: HelpCircle },
