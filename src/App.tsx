@@ -3,6 +3,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout } from './components/layout/layout';
 import { UserList } from './components/users/UserList';
 import { Dashboard } from './components/dashboard/Dashboard';
+import { TenantList } from './components/tenants/TenantList';
+import { MembershipList } from './components/membership/MembershipList';
 import { ResetPassword } from './components/auth/ResetPassword';
 import { Login } from './components/auth/Login';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -22,7 +24,8 @@ function App() {
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/users" element={<UserList />} />
-                    <Route path="/tenants" element={<div>Tenants Coming Soon</div>} />
+                    <Route path="/tenants" element={<TenantList />} />
+                    <Route path="/membership" element={<MembershipList />} />
                     <Route path="/payments" element={<div>Payments Coming Soon</div>} />
                     <Route path="/settings" element={<div>Settings Coming Soon</div>} />
                     <Route path="/help" element={<div>Help Coming Soon</div>} />
