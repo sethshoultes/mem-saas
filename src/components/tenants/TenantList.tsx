@@ -89,6 +89,7 @@ export function TenantList() {
               setSelectedTenant(tenant);
               setIsModalOpen(true);
             }}
+            onRefresh={fetchTenants}
           />
         ))}
       </div>

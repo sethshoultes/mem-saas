@@ -12,6 +12,18 @@ Features added:
 - Tenant deletion with cascading updates
 - Activity logging for tenant operations
 
+[2025-03-21] v0.8.0
+- Implemented Tenant Management UI with comprehensive tenant administration
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Tenant list view with search and filtering
+- Tenant creation and editing
+- Tenant statistics and metrics
+- Tenant deletion with cascading updates
+- Activity logging for tenant operations
+
 [2025-03-21] v0.7.0
 - Implemented Tenant Management System with multi-tenant infrastructure
 - Type: Feature
