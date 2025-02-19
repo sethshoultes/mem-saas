@@ -1,5 +1,16 @@
 # Version History
 
+[2025-03-21] v0.4.18
+- Fixed user deletion with soft delete pattern
+- Type: Bug fix
+- Contributor: Bolt
+
+Changes:
+- Removed direct auth.users deletion
+- Implemented soft deletion pattern
+- Added better error handling
+- Improved activity logging
+
 [2025-03-21] v0.4.17
 - Fixed user list fetching with proper auth method
 - Type: Bug fix

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User } from '../../types';
 import { Button } from '../ui/button';
 import { X } from 'lucide-react';
@@ -12,16 +12,37 @@ interface UserModalProps {
 }
 
 export function UserModal({ user, isOpen, onClose, onSuccess }: UserModalProps) {
-  const [formData, setFormData] = useState({
-    email: user?.email || '',
+  const [formData, setFormData] = useState(() => ({
+    email: '',
     password: '',
-    fullName: user?.profile?.full_name || '',
-    role: user?.profile?.role || 'user',
-    tenantId: user?.profile?.tenant_id || '',
-  });
+    fullName: '',
+    role: 'user',
+    tenantId: '',
+  }));
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Update form data when user prop changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        email: user.email,
+        password: '',
+        fullName: user.profile?.full_name || '',
+        role: user.profile?.role || 'user',
+        tenantId: user.profile?.tenant_id || '',
+      });
+    } else {
+      setFormData({
+        email: '',
+        password: '',
+        fullName: '',
+        role: 'user',
+        tenantId: '',
+      });
+    }
+  }, [user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,8 +59,16 @@ export function UserModal({ user, isOpen, onClose, onSuccess }: UserModalProps) 
         });
       } else {
         // Create new user
-        await signUp(formData.email, formData.password, formData.fullName);
+        const { data } = await signUp(formData.email, formData.password, formData.fullName);
+        if (data?.user) {
+          // Update role and tenant if specified
+          await updateUserProfile(data.user.id, {
+            role: formData.role as User['profile']['role'],
+            tenant_id: formData.tenantId || null,
+          });
+        }
       }
+      // Ensure the user list is refreshed with the latest data
       onSuccess();
       onClose();
     } catch (err) {
@@ -54,7 +83,7 @@ export function UserModal({ user, isOpen, onClose, onSuccess }: UserModalProps) 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-white">
           <h2 className="text-lg font-semibold text-gray-900">
             {user ? 'Edit User' : 'Add New User'}
           </h2>

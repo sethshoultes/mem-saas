@@ -25,28 +25,11 @@ export async function signIn(email: string, password: string) {
 }
 
 export async function deleteUser(userId: string) {
-  // First log the deletion activity
-  await supabase.rpc('log_user_activity', {
-    p_user_id: userId,
-    p_action: 'user_deleted',
-    p_details: { deleted_at: new Date().toISOString() }
-  });
+  const { error } = await supabase
+    .rpc('delete_user', { target_user_id: userId });
 
-  // Delete user profile first (due to foreign key constraint)
-  const { error: profileError } = await supabase
-    .from('user_profiles')
-    .delete()
-    .eq('id', userId);
-
-  if (profileError) {
-    throw profileError;
-  }
-
-  // Delete the user from auth.users
-  const { error: authError } = await supabase.auth.admin.deleteUser(userId);
-
-  if (authError) {
-    throw authError;
+  if (error) {
+    throw error;
   }
 }
 

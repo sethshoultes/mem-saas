@@ -25,11 +25,22 @@ export function UserList() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
 
-      const { data: profiles, error } = await supabase
-        .rpc('get_accessible_users', { viewer_id: user.id });
+      // First get all accessible user profiles
+      const { data: profiles, error: profilesError } = await supabase
+        .rpc('get_accessible_users', { viewer_id: user.id })
+        .select('*');
       
-      if (error) throw error;
+      if (profilesError) throw profilesError;
       if (!profiles) throw new Error('No profiles returned');
+
+      // Get emails for each user using the secure function
+      const emailPromises = profiles.map(async profile => {
+        const { data: email } = await supabase
+          .rpc('get_user_email', { user_id: profile.id });
+        return { id: profile.id, email };
+      });
+
+      const emails = await Promise.all(emailPromises);
 
       // Fetch activities for all users
       const { data: allActivities, error: activitiesError } = await supabase
@@ -50,7 +61,7 @@ export function UserList() {
       setActivities(groupedActivities);
       const combinedUsers: User[] = profiles.map(profile => ({
         id: profile.id,
-        email: profile.id === user.id ? user.email : profile.email || '',
+        email: emails.find(e => e.id === profile.id)?.email || '',
         profile,
       }));
 
