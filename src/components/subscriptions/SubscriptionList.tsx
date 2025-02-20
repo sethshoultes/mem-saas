@@ -31,12 +31,21 @@ export function SubscriptionList() {
 
   async function fetchSubscriptions() {
     try {
-      const { data: profile } = await supabase.auth.getUser();
-      if (!profile.user) return;
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Get user's tenant_id first
+      const { data: profile } = await supabase
+        .from('user_profiles')
+        .select('tenant_id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile?.tenant_id) return;
 
       const { data, error } = await supabase
         .rpc('get_tenant_subscriptions', {
-          p_tenant_id: profile.user.id
+          p_tenant_id: profile.tenant_id
         });
 
       if (error) throw error;

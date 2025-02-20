@@ -21,13 +21,22 @@ export function BulkOperationStatus({ operationId, onComplete }: BulkOperationSt
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const getOperationName = (type: string | undefined) => {
+    if (!type) return 'Operation';
+    return type.replace('bulk_', '').replace(/_/g, ' ');
+  };
+
   useEffect(() => {
     const checkStatus = async () => {
       try {
         const data = await getBulkOperationStatus(operationId);
         setStatus(data);
         
-        if (data && data.processed_items + data.failed_items >= data.total_items) {
+        // Check if operation is complete
+        const isComplete = data && 
+          (data.processed_items + data.failed_items >= data.total_items);
+        
+        if (isComplete) {
           onComplete?.();
         } else {
           // Continue polling if operation is not complete
@@ -66,7 +75,7 @@ export function BulkOperationStatus({ operationId, onComplete }: BulkOperationSt
   }
 
   const isComplete = status.processed_items + status.failed_items >= status.total_items;
-  const operationName = status.operation_type.replace('bulk_', '').replace('_', ' ');
+  const operationName = getOperationName(status.operation_type);
 
   return (
     <div className="space-y-2">
@@ -108,15 +117,17 @@ export function BulkOperationStatus({ operationId, onComplete }: BulkOperationSt
       {status.failed_items > 0 && (
         <div className="mt-4">
           <div className="text-sm font-medium text-gray-900 mb-2">Failed Operations</div>
-          <div className="space-y-1">
-            {status.details
-              .filter(detail => detail.error)
-              .map((detail, index) => (
-                <div key={index} className="text-sm text-red-600">
-                  {detail.error}
-                </div>
-              ))}
-          </div>
+          {status.details && (
+            <div className="space-y-1">
+              {status.details
+                .filter(detail => detail.error)
+                .map((detail, index) => (
+                  <div key={index} className="text-sm text-red-600">
+                    {detail.error}
+                  </div>
+                ))}
+            </div>
+          )}
         </div>
       )}
     </div>
