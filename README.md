@@ -13,7 +13,7 @@
 The Multi-Tenant Membership SaaS Platform Admin System is a comprehensive management interface designed to handle user management, tenant administration, payment processing, and system analytics. This system serves as the central control point for platform administrators to manage all aspects of the SaaS platform.
 
 ## Core Components
-1. User Management Module - [View Specification](/DOCS/user-management.md) 
+1. User Management Module - [View Specification](https://github.com/sethshoultes/mem-saas/blob/main/DOCS/SPECS/user-management.md) 
    - User administration and role management
    - Authentication and access control
    - Activity tracking and audit logs
