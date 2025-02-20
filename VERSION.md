@@ -1,5 +1,10 @@
 # Version History
 
+[2025-03-21] v0.10.9
+- Added mock payment system with test card processing and webhook simulation
+- Type: Feature
+- Contributor: Bolt
+
 [2025-03-21] v0.10.8
 - Updated subscription list to show trial information
 - Type: Feature
