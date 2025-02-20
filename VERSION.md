@@ -1,5 +1,29 @@
 # Version History
 
+[2025-03-21] v0.11.5
+- Completed all phases of Payment Integration Mock System
+- Type: Feature
+- Contributor: Bolt
+
+Features completed:
+- Test card generator with copy functionality
+- Webhook event simulator with real-time feedback
+- Transaction log viewer with filtering
+- Error injection tools and simulation
+- Comprehensive webhook management system
+
+[2025-03-21] v0.11.4
+- Added dedicated webhooks tab with comprehensive webhook management
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Webhook event simulation
+- Real-time webhook log viewer
+- Delivery attempt tracking
+- Event data inspection
+- Automatic log refresh
+
 [2025-03-21] v0.11.3
 - Completed Phase 2 of Payment Integration Mock System
 - Type: Feature

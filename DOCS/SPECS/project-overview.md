@@ -46,7 +46,7 @@ The Multi-Tenant Membership SaaS Platform Admin System is a comprehensive manage
 - Financial reporting
 
 ### 6. Content Gating - [View Specification](./content-gating.md)
-⏳ Pending
+🔄 In Progress
 - Access control implementation
 - Content protection
 - Permission management
