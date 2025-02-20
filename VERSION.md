@@ -1,5 +1,51 @@
 # Version History
 
+[2025-03-21] v0.11.3
+- Completed Phase 2 of Payment Integration Mock System
+- Type: Feature
+- Contributor: Bolt
+
+Features completed:
+- Subscription management integration
+- Refund processing with webhooks
+- Enhanced error scenario simulation
+- Webhook retry logic implementation
+
+[2025-03-21] v0.11.2
+- Added Transaction History viewer with filtering and export capabilities
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Transaction list view with status indicators
+- Date range filtering
+- Status filtering
+- CSV export functionality
+- Real-time refresh
+
+[2025-03-21] v0.11.1
+- Added refund processing and enhanced error handling to mock payment system
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Refund processing functionality
+- Enhanced error scenarios
+- Webhook retry mechanism
+- Transaction history tracking
+
+[2025-03-21] v0.11.0
+- Added mock payment system with test card processing and webhook handling
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Mock payment processing with test cards
+- Payment result simulation
+- Webhook event handling
+- Payment testing interface
+- Transaction tracking
+
 [2025-03-21] v0.10.9
 - Added mock payment system with test card processing and webhook simulation
 - Type: Feature

@@ -17,7 +17,7 @@ const navigation = [
   { name: 'Tenants', href: '/tenants', icon: Building2 },
   { name: 'Membership', href: '/membership', icon: Ticket },
   { name: 'Subscriptions', href: '/subscriptions', icon: Receipt },
-  { name: 'Payments', href: '/payments', icon: CreditCard },
+  { name: 'Payments', href: '/payments', icon: CreditCard, badge: 'New' },
   { name: 'Settings', href: '/settings', icon: Settings },
   { name: 'Help', href: '/help', icon: HelpCircle },
 ];
@@ -55,7 +55,14 @@ export function Sidebar() {
                         )}
                         aria-hidden="true"
                       />
-                      {item.name}
+                      <span className="flex items-center gap-2">
+                        {item.name}
+                        {item.badge && (
+                          <span className="px-1.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 rounded">
+                            {item.badge}
+                          </span>
+                        )}
+                      </span>
                     </Link>
                   </li>
                 ))}
