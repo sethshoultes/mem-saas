@@ -22,8 +22,7 @@ export function BulkOperationStatus({ operationId, onComplete }: BulkOperationSt
   const [error, setError] = useState<string | null>(null);
 
   const getOperationName = (type: string | undefined) => {
-    if (!type) return 'Operation';
-    return type.replace('bulk_', '').replace(/_/g, ' ');
+    return type ? type.replace('bulk_', '').replace(/_/g, ' ') : 'Operation';
   };
 
   useEffect(() => {
@@ -32,24 +31,32 @@ export function BulkOperationStatus({ operationId, onComplete }: BulkOperationSt
         const data = await getBulkOperationStatus(operationId);
         setStatus(data);
         
-        // Check if operation is complete
-        const isComplete = data && 
-          (data.processed_items + data.failed_items >= data.total_items);
+        if (data) {
+          const isComplete = data.processed_items + data.failed_items >= data.total_items;
         
-        if (isComplete) {
-          onComplete?.();
-        } else {
-          // Continue polling if operation is not complete
-          setTimeout(checkStatus, 2000);
+          if (isComplete) {
+            onComplete?.();
+          } else {
+            // Continue polling if operation is not complete
+            setTimeout(checkStatus, 2000);
+          }
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to check operation status');
+        clearTimeout();
       } finally {
         setIsLoading(false);
       }
     };
 
+    let timeoutId: number;
     checkStatus();
+    
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [operationId, onComplete]);
 
   if (isLoading) {

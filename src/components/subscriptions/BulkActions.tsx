@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { AlertCircle, CreditCard, Loader2, Trash2 } from 'lucide-react';
-import { bulkUpdateSubscriptionStatus, bulkCancelSubscriptions, bulkConvertTrials } from '../../lib/subscriptions';
+import { bulkCancelSubscriptions, bulkConvertTrials } from '../../lib/subscriptions';
 import { BulkOperationStatus } from './BulkOperationStatus';
 
 interface BulkActionsProps {
@@ -19,21 +19,15 @@ export function BulkActions({
   const [error, setError] = useState<string | null>(null);
   const [currentOperation, setCurrentOperation] = useState<string | null>(null);
 
-  const handleBulkAction = async (
-    action: 'activate' | 'cancel' | 'convert',
-    immediate: boolean = false
-  ) => {
+  const handleBulkAction = async (action: 'cancel' | 'convert') => {
     setIsProcessing(true);
     setError(null);
+    let result;
 
     try {
-      let result;
       switch (action) {
-        case 'activate':
-          result = await bulkUpdateSubscriptionStatus(selectedSubscriptions, 'active');
-          break;
         case 'cancel':
-          result = await bulkCancelSubscriptions(selectedSubscriptions, immediate);
+          result = await bulkCancelSubscriptions(selectedSubscriptions, true);
           break;
         case 'convert':
           result = await bulkConvertTrials(selectedSubscriptions);
@@ -42,6 +36,7 @@ export function BulkActions({
       setCurrentOperation(result.operation_id);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Operation failed');
+      setCurrentOperation(null);
       setIsProcessing(false);
     }
   };
@@ -82,19 +77,6 @@ export function BulkActions({
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => handleBulkAction('activate')}
-            disabled={isProcessing}
-          >
-            {isProcessing ? (
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-            ) : (
-              <CreditCard className="h-4 w-4 mr-2" />
-            )}
-            Activate Selected
-          </Button>
 
           <Button
             variant="secondary"
@@ -113,7 +95,7 @@ export function BulkActions({
           <Button
             variant="danger"
             size="sm"
-            onClick={() => handleBulkAction('cancel', true)}
+            onClick={() => handleBulkAction('cancel')}
             disabled={isProcessing}
           >
             {isProcessing ? (

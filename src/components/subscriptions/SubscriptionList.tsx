@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../ui/button';
 import { BulkActions } from './BulkActions';
-import { Search, Filter, CreditCard, AlertCircle, Plus } from 'lucide-react';
+import { Search, Filter, CreditCard, AlertCircle, Trash2, Loader2, Plus } from 'lucide-react';
 import { formatDate, formatCurrency } from '../../lib/utils';
 import { cancelSubscription, reactivateSubscription, retrySubscriptionPayment } from '../../lib/subscriptions';
 import { CreateSubscriptionModal } from './CreateSubscriptionModal';
@@ -24,6 +24,7 @@ export function SubscriptionList() {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled' | 'past_due'>('all');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [processingSubscriptionId, setProcessingSubscriptionId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchSubscriptions();
@@ -212,18 +213,33 @@ export function SubscriptionList() {
                       <Button
                         variant="secondary"
                         size="sm"
+                        className="inline-flex items-center"
                         onClick={async () => {
                           if (confirm('Are you sure you want to cancel this subscription?')) {
+                            setProcessingSubscriptionId(subscription.subscription_id);
                             try {
-                              await cancelSubscription(subscription.subscription_id);
+                              await cancelSubscription(subscription.subscription_id, true);
                               fetchSubscriptions();
                             } catch (error) {
                               console.error('Error canceling subscription:', error);
+                            } finally {
+                              setProcessingSubscriptionId(null);
                             }
                           }
                         }}
+                        disabled={isLoading || processingSubscriptionId === subscription.subscription_id}
                       >
-                        Cancel
+                        {processingSubscriptionId === subscription.subscription_id ? (
+                          <>
+                            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            Canceling...
+                          </>
+                        ) : (
+                          <>
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Cancel
+                          </>
+                        )}
                       </Button>
                     ) : subscription.status === 'past_due' ? (
                       <Button
