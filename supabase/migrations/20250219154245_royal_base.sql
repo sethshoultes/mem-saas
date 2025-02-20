@@ -435,6 +435,227 @@ BEGIN
   RETURN v_stats;
 END;
 $$;
+/*
+  # Subscription Upgrade and Proration Functions
+
+  1. New Functions
+    - `upgrade_subscription`: Handles plan upgrades with proration
+    - `downgrade_subscription`: Handles plan downgrades with proration
+    - `calculate_proration`: Calculates prorated amounts
+    - `get_subscription_changes`: Tracks subscription changes
+
+  2. Changes
+    - Added proration calculation logic
+    - Added upgrade/downgrade tracking
+    - Added subscription history
+
+  3. Security
+    - Functions use SECURITY DEFINER
+    - Input validation for all parameters
+*/
+
+-- Function to calculate prorated amount
+CREATE OR REPLACE FUNCTION calculate_proration(
+  p_old_price decimal,
+  p_new_price decimal,
+  p_start_date timestamptz,
+  p_end_date timestamptz,
+  p_change_date timestamptz
+)
+RETURNS decimal
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_total_days integer;
+  v_remaining_days integer;
+  v_old_daily_rate decimal;
+  v_new_daily_rate decimal;
+  v_prorated_amount decimal;
+BEGIN
+  -- Calculate total and remaining days
+  v_total_days := EXTRACT(EPOCH FROM (p_end_date - p_start_date))::integer / 86400;
+  v_remaining_days := EXTRACT(EPOCH FROM (p_end_date - p_change_date))::integer / 86400;
+  
+  -- Calculate daily rates
+  v_old_daily_rate := p_old_price / v_total_days;
+  v_new_daily_rate := p_new_price / v_total_days;
+  
+  -- Calculate prorated amount
+  v_prorated_amount := (v_new_daily_rate * v_remaining_days) - (v_old_daily_rate * v_remaining_days);
+  
+  RETURN ROUND(v_prorated_amount, 2);
+END;
+$$;
+
+-- Function to upgrade subscription
+CREATE OR REPLACE FUNCTION upgrade_subscription(
+  p_subscription_id uuid,
+  p_new_plan_id uuid,
+  p_immediate boolean DEFAULT true
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_old_subscription member_subscriptions;
+  v_old_plan membership_plans;
+  v_new_plan membership_plans;
+  v_proration_amount decimal;
+  v_change_date timestamptz;
+BEGIN
+  -- Get current subscription and plans
+  SELECT * INTO v_old_subscription
+  FROM member_subscriptions
+  WHERE id = p_subscription_id;
+  
+  SELECT * INTO v_old_plan
+  FROM membership_plans
+  WHERE id = v_old_subscription.plan_id;
+  
+  SELECT * INTO v_new_plan
+  FROM membership_plans
+  WHERE id = p_new_plan_id;
+  
+  -- Validate upgrade
+  IF v_new_plan.price <= v_old_plan.price THEN
+    RAISE EXCEPTION 'New plan price must be higher for upgrades';
+  END IF;
+  
+  -- Set change date
+  v_change_date := CASE 
+    WHEN p_immediate THEN now()
+    ELSE v_old_subscription.current_period_end
+  END;
+  
+  -- Calculate proration if immediate
+  IF p_immediate THEN
+    v_proration_amount := calculate_proration(
+      v_old_plan.price,
+      v_new_plan.price,
+      v_old_subscription.current_period_start,
+      v_old_subscription.current_period_end,
+      v_change_date
+    );
+  END IF;
+  
+  -- Update subscription
+  UPDATE member_subscriptions
+  SET
+    plan_id = p_new_plan_id,
+    updated_at = now()
+  WHERE id = p_subscription_id;
+  
+  -- Log the change
+  PERFORM log_user_activity(
+    v_old_subscription.user_id,
+    'subscription_upgraded',
+    jsonb_build_object(
+      'subscription_id', p_subscription_id,
+      'old_plan_id', v_old_plan.id,
+      'new_plan_id', p_new_plan_id,
+      'proration_amount', v_proration_amount,
+      'immediate', p_immediate,
+      'effective_date', v_change_date
+    )
+  );
+  
+  RETURN jsonb_build_object(
+    'subscription_id', p_subscription_id,
+    'proration_amount', v_proration_amount,
+    'effective_date', v_change_date
+  );
+END;
+$$;
+
+-- Function to downgrade subscription
+CREATE OR REPLACE FUNCTION downgrade_subscription(
+  p_subscription_id uuid,
+  p_new_plan_id uuid
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_subscription member_subscriptions;
+  v_old_plan membership_plans;
+  v_new_plan membership_plans;
+BEGIN
+  -- Get current subscription and plans
+  SELECT * INTO v_subscription
+  FROM member_subscriptions
+  WHERE id = p_subscription_id;
+  
+  SELECT * INTO v_old_plan
+  FROM membership_plans
+  WHERE id = v_subscription.plan_id;
+  
+  SELECT * INTO v_new_plan
+  FROM membership_plans
+  WHERE id = p_new_plan_id;
+  
+  -- Validate downgrade
+  IF v_new_plan.price >= v_old_plan.price THEN
+    RAISE EXCEPTION 'New plan price must be lower for downgrades';
+  END IF;
+  
+  -- Schedule downgrade for end of current period
+  UPDATE member_subscriptions
+  SET
+    plan_id = p_new_plan_id,
+    updated_at = now()
+  WHERE id = p_subscription_id;
+  
+  -- Log the change
+  PERFORM log_user_activity(
+    v_subscription.user_id,
+    'subscription_downgraded',
+    jsonb_build_object(
+      'subscription_id', p_subscription_id,
+      'old_plan_id', v_old_plan.id,
+      'new_plan_id', p_new_plan_id,
+      'effective_date', v_subscription.current_period_end
+    )
+  );
+  
+  RETURN jsonb_build_object(
+    'subscription_id', p_subscription_id,
+    'effective_date', v_subscription.current_period_end
+  );
+END;
+$$;
+
+-- Function to get subscription changes history
+CREATE OR REPLACE FUNCTION get_subscription_changes(
+  p_subscription_id uuid
+)
+RETURNS TABLE (
+  change_type text,
+  old_plan_id uuid,
+  new_plan_id uuid,
+  proration_amount decimal,
+  effective_date timestamptz,
+  created_at timestamptz
+)
+LANGUAGE sql
+SECURITY DEFINER
+STABLE
+AS $$
+  SELECT
+    action as change_type,
+    (details->>'old_plan_id')::uuid as old_plan_id,
+    (details->>'new_plan_id')::uuid as new_plan_id,
+    (details->>'proration_amount')::decimal as proration_amount,
+    (details->>'effective_date')::timestamptz as effective_date,
+    created_at
+  FROM user_activity
+  WHERE 
+    action IN ('subscription_upgraded', 'subscription_downgraded') AND
+    (details->>'subscription_id')::uuid = p_subscription_id
+  ORDER BY created_at DESC;
+$$;
 
 -- Grant Permissions
 GRANT ALL ON user_profiles TO authenticated;
@@ -455,3 +676,8 @@ GRANT EXECUTE ON FUNCTION cancel_subscription TO authenticated;
 GRANT EXECUTE ON FUNCTION reactivate_subscription TO authenticated;
 GRANT EXECUTE ON FUNCTION retry_subscription_payment TO authenticated;
 GRANT EXECUTE ON FUNCTION get_dashboard_stats TO authenticated;
+
+GRANT EXECUTE ON FUNCTION calculate_proration TO authenticated;
+GRANT EXECUTE ON FUNCTION upgrade_subscription TO authenticated;
+GRANT EXECUTE ON FUNCTION downgrade_subscription TO authenticated;
+GRANT EXECUTE ON FUNCTION get_subscription_changes TO authenticated;

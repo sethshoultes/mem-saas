@@ -105,3 +105,43 @@ export async function getSubscriptionDetails(subscriptionId: string) {
   if (error) throw error;
   return data;
 }
+
+export async function upgradeSubscription(
+  subscriptionId: string,
+  newPlanId: string,
+  immediate: boolean = true
+) {
+  const { data, error } = await supabase
+    .rpc('upgrade_subscription', {
+      p_subscription_id: subscriptionId,
+      p_new_plan_id: newPlanId,
+      p_immediate: immediate
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function downgradeSubscription(
+  subscriptionId: string,
+  newPlanId: string
+) {
+  const { data, error } = await supabase
+    .rpc('downgrade_subscription', {
+      p_subscription_id: subscriptionId,
+      p_new_plan_id: newPlanId
+    });
+
+  if (error) throw error;
+  return data;
+}
+
+export async function getSubscriptionChanges(subscriptionId: string) {
+  const { data, error } = await supabase
+    .rpc('get_subscription_changes', {
+      p_subscription_id: subscriptionId
+    });
+
+  if (error) throw error;
+  return data;
+}

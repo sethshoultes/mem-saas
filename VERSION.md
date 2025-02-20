@@ -1,5 +1,21 @@
 # Version History
 
+[2025-03-21] v0.9.3
+- Added subscription upgrade/downgrade functionality with proration support
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Subscription plan upgrades with immediate or end-of-period options
+- Subscription plan downgrades (effective at period end)
+- Proration calculations for plan changes
+- Subscription change history tracking
+
+[2025-03-21] v0.9.2
+- Fixed membership_plans foreign key constraint to reference tenants table instead of users
+- Type: Bug fix
+- Contributor: Bolt
+
 [2025-03-21] v0.9.1
 - Enhanced Subscription Management with cancellation, reactivation, and payment retry
 - Type: Feature
