@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Button } from '../ui/button';
-import { Search, Filter, CreditCard, AlertCircle } from 'lucide-react';
+import { BulkActions } from './BulkActions';
+import { Search, Filter, CreditCard, AlertCircle, Plus } from 'lucide-react';
 import { formatDate, formatCurrency } from '../../lib/utils';
 import { cancelSubscription, reactivateSubscription, retrySubscriptionPayment } from '../../lib/subscriptions';
+import { CreateSubscriptionModal } from './CreateSubscriptionModal';
 
 interface Subscription {
   subscription_id: string;
@@ -18,8 +20,10 @@ interface Subscription {
 export function SubscriptionList() {
   const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedSubscriptions, setSelectedSubscriptions] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'canceled' | 'past_due'>('all');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   useEffect(() => {
     fetchSubscriptions();
@@ -51,6 +55,18 @@ export function SubscriptionList() {
     return matchesSearch && matchesStatus;
   });
 
+  const handleSubscriptionSelect = (subscriptionId: string, isSelected: boolean) => {
+    if (isSelected) {
+      setSelectedSubscriptions([...selectedSubscriptions, subscriptionId]);
+    } else {
+      setSelectedSubscriptions(selectedSubscriptions.filter(id => id !== subscriptionId));
+    }
+  };
+
+  const handleSelectAll = (isSelected: boolean) => {
+    setSelectedSubscriptions(isSelected ? filteredSubscriptions.map(s => s.subscription_id) : []);
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
@@ -72,7 +88,19 @@ export function SubscriptionList() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Subscriptions</h1>
+        <Button onClick={() => setIsCreateModalOpen(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Create Subscription
+        </Button>
       </div>
+
+      {selectedSubscriptions.length > 0 && (
+        <BulkActions
+          selectedSubscriptions={selectedSubscriptions}
+          onClearSelection={() => setSelectedSubscriptions([])}
+          onRefresh={fetchSubscriptions}
+        />
+      )}
 
       <div className="flex gap-4">
         <div className="relative flex-1">
@@ -107,6 +135,14 @@ export function SubscriptionList() {
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                    checked={selectedSubscriptions.length === filteredSubscriptions.length}
+                    onChange={(e) => handleSelectAll(e.target.checked)}
+                  />
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   User
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -129,6 +165,14 @@ export function SubscriptionList() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredSubscriptions.map((subscription) => (
                 <tr key={subscription.subscription_id}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                      checked={selectedSubscriptions.includes(subscription.subscription_id)}
+                      onChange={(e) => handleSubscriptionSelect(subscription.subscription_id, e.target.checked)}
+                    />
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-medium text-gray-900">
                       {subscription.user_name}
@@ -214,6 +258,12 @@ export function SubscriptionList() {
           </table>
         </div>
       </div>
+
+      <CreateSubscriptionModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={fetchSubscriptions}
+      />
     </div>
   );
 }

@@ -1,5 +1,86 @@
 # Version History
 
+[2025-03-21] v0.10.1
+- Added user search functionality to subscription creation
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- User search and selection component
+- Real-time user filtering
+- Tenant-based user list
+- Improved subscription creation UX
+
+[2025-03-21] v0.10.0
+- Added subscription creation UI with trial period support
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Modal for creating new subscriptions
+- Plan selection with pricing details
+- Trial period support
+- Tenant and user selection
+- Real-time validation
+
+[2025-03-21] v0.9.9
+- Added Subscriber Management specification
+- Type: Documentation
+- Contributor: Bolt
+
+[2025-03-21] v0.9.8
+- Fixed syntax error in BulkActions component
+- Type: Bug fix
+- Contributor: Bolt
+
+[2025-03-21] v0.9.7
+- Added bulk operation status monitoring with real-time progress tracking
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Real-time operation progress monitoring
+- Success/failure tracking for bulk operations
+- Visual progress indicators
+- Detailed error reporting
+- Automatic status polling
+
+[2025-03-21] v0.9.6
+- Added bulk subscription operations UI with multi-select functionality
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Multi-subscription selection
+- Bulk activation/cancellation
+- Bulk trial conversion
+- Operation status tracking
+- Error handling and feedback
+
+[2025-03-21] v0.9.5
+- Added bulk subscription operations and management tools
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Bulk subscription status updates
+- Subscription filtering and search
+- Batch trial conversion
+- Activity logging for bulk operations
+- Enhanced subscription management UI
+
+[2025-03-21] v0.9.4
+- Added trial period management with subscription tracking
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Trial period support for membership plans
+- Trial subscription creation and tracking
+- Trial expiration handling
+- Trial to paid conversion
+- Trial status monitoring
+
 [2025-03-21] v0.9.3
 - Added subscription upgrade/downgrade functionality with proration support
 - Type: Feature
