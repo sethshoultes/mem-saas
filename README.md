@@ -18,17 +18,17 @@ The Multi-Tenant Membership SaaS Platform Admin System is a comprehensive manage
    - Authentication and access control
    - Activity tracking and audit logs
 
-2. Dashboard & Analytics - [View Specification](./dashboard.md) 
+2. Dashboard & Analytics - [View Specification](DOCS/SPECS/dashboard.md) 
    - Real-time statistics and KPIs
    - Data visualization
    - Performance monitoring
 
-3. Tenant Management System - [View Specification](./tenant-management.md) 
+3. Tenant Management System - [View Specification](DOCS/SPECS/tenant-management.md) 
    - Tenant lifecycle management
    - Configuration and customization
    - Resource allocation and monitoring
 
-4. Payment Integration - [View Specification](./payment-integration.md) 
+4. Payment Integration - [View Specification](DOCS/SPECS/payment-integration.md) 
    - Stripe payment processing
    - Subscription management
    - Financial reporting and reconciliation
