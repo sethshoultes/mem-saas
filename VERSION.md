@@ -1,5 +1,40 @@
 # Version History
 
+[2025-03-21] v0.10.8
+- Updated subscription list to show trial information
+- Type: Feature
+- Contributor: Bolt
+
+[2025-03-21] v0.10.7
+- Updated membership plan functions to support trial periods
+- Type: Feature
+- Contributor: Bolt
+
+[2025-03-21] v0.10.6
+- Added trial period management to membership plans
+- Type: Feature
+- Contributor: Bolt
+
+[2025-03-21] v0.10.5
+- Added trial period management interface with conversion options
+- Type: Feature
+- Contributor: Bolt
+
+[2025-03-21] v0.10.4
+- Fixed plan change validation and improved UX for upgrades/downgrades
+- Type: Bug fix
+- Contributor: Bolt
+
+[2025-03-21] v0.10.3
+- Fixed subscription plan change functionality and current plan display
+- Type: Bug fix
+- Contributor: Bolt
+
+[2025-03-21] v0.10.2
+- Added subscription plan upgrade/downgrade UI with immediate/end-of-period options
+- Type: Feature
+- Contributor: Bolt
+
 [2025-03-21] v0.10.1
 - Added user search functionality to subscription creation
 - Type: Feature

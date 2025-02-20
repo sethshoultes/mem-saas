@@ -163,7 +163,7 @@ export async function createTrialSubscription(
 export async function processTrialExpiration(
   subscriptionId: string,
   convertToPaid: boolean = false
-) {
+): Promise<void> {
   const { data, error } = await supabase
     .rpc('process_trial_expiration', {
       p_subscription_id: subscriptionId,
@@ -171,7 +171,6 @@ export async function processTrialExpiration(
     });
 
   if (error) throw error;
-  return data;
 }
 
 export async function getTrialStatus(subscriptionId: string) {

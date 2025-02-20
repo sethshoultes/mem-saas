@@ -39,9 +39,14 @@ export function MembershipPlanCard({ plan, onEdit, onDelete }: MembershipPlanCar
       <div className="mb-4">
         <div className="text-2xl font-bold text-gray-900">
           {formatCurrency(plan.price)}
-          <span className="text-sm font-normal text-gray-500">
-            /{plan.interval}
-          </span>
+          <div className="text-sm font-normal text-gray-500">
+            per {plan.interval}
+            {plan.trial_days > 0 && (
+              <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                {plan.trial_days}-day trial
+              </span>
+            )}
+          </div>
         </div>
       </div>
       

@@ -6,6 +6,7 @@ export async function createMembershipPlan(
   description: string | null,
   price: number,
   interval: 'monthly' | 'yearly',
+  trial_days: number,
   features: string[]
 ): Promise<string> {
   const { data, error } = await supabase.rpc('create_membership_plan', {
@@ -13,6 +14,7 @@ export async function createMembershipPlan(
     p_description: description,
     p_price: price,
     p_interval: interval,
+    p_trial_days: trial_days,
     p_features: features
   });
 

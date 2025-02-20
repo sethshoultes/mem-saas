@@ -22,6 +22,7 @@ export function MembershipModal({
     description: '',
     price: 0,
     interval: 'monthly' as const,
+    trial_days: 0,
     features: [''],
   }));
 
@@ -35,6 +36,7 @@ export function MembershipModal({
         description: plan.description || '',
         price: plan.price,
         interval: plan.interval,
+        trial_days: plan.trial_days || 0,
         features: plan.features,
       });
     } else {
@@ -43,6 +45,7 @@ export function MembershipModal({
         description: '',
         price: 0,
         interval: 'monthly',
+        trial_days: 0,
         features: [''],
       });
     }
@@ -65,6 +68,7 @@ export function MembershipModal({
           formData.description || null,
           formData.price,
           formData.interval,
+          formData.trial_days,
           formData.features.filter(Boolean)
         );
       }
@@ -176,6 +180,22 @@ export function MembershipModal({
                 <option value="yearly">Yearly</option>
               </select>
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Trial Period (Days)
+            </label>
+            <input
+              type="number"
+              min="0"
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+              value={formData.trial_days}
+              onChange={(e) => setFormData({ ...formData, trial_days: parseInt(e.target.value) || 0 })}
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Set to 0 to disable trial period
+            </p>
           </div>
 
           <div>
