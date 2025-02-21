@@ -1,5 +1,81 @@
 # Version History
 
+[2025-03-21] v0.12.6
+- Fixed content access levels and preview content for demo
+- Type: Bug fix
+- Contributor: Bolt
+
+Features fixed:
+- Proper access rule configuration
+- Enhanced preview content
+- Clear access level demonstration
+- Improved content examples
+
+[2025-03-21] v0.12.5
+- Added comprehensive demo environment for content gating testing
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Demo tenant with pre-configured plans
+- Sample content with access rules
+- Improved demo UI with helpful descriptions
+- Complete test environment setup
+
+[2025-03-21] v0.12.4
+- Added user selector to widget demo for easier access testing
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Interactive user selection interface
+- User descriptions and context
+- Improved testing UX
+
+[2025-03-21] v0.12.3
+- Added demo users for content gating testing
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Demo user accounts for testing
+- Automatic subscription setup
+- Fixed UUID validation errors
+
+[2025-03-21] v0.12.2
+- Added widget demo for content gating testing
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Interactive widget demo component
+- Access level testing interface
+- Embed code generation
+- Content preview simulation
+
+[2025-03-21] v0.12.1
+- Fixed content gating selection and loading states
+- Type: Bug fix
+- Contributor: Bolt
+
+Features fixed:
+- Content selection state management
+- Loading feedback during content switches
+- Error handling and state cleanup
+- Preview content loading reliability
+
+[2025-03-21] v0.12.0
+- Implemented Content Gating with Access Control Integration
+- Type: Feature
+- Contributor: Bolt
+
+Features added:
+- Content access rules management
+- Preview content support
+- Access verification system
+- Granular permission controls
+- Content preview editor
+
 [2025-03-21] v0.11.5
 - Completed all phases of Payment Integration Mock System
 - Type: Feature

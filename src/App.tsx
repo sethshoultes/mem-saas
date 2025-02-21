@@ -7,6 +7,7 @@ import { TenantList } from './components/tenants/TenantList';
 import { MembershipList } from './components/membership/MembershipList';
 import { SubscriptionList } from './components/subscriptions/SubscriptionList';
 import { PaymentsPage } from './components/payments/PaymentsPage';
+import { ContentGatingDemo } from './components/content/ContentGatingDemo';
 import { ResetPassword } from './components/auth/ResetPassword';
 import { Login } from './components/auth/Login';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
@@ -30,6 +31,7 @@ function App() {
                     <Route path="/membership" element={<MembershipList />} />
                     <Route path="/subscriptions" element={<SubscriptionList />} />
                     <Route path="/payments" element={<PaymentsPage />} />
+                    <Route path="/content-gating" element={<ContentGatingDemo />} />
                     <Route path="/settings" element={<div>Settings Coming Soon</div>} />
                     <Route path="/help" element={<div>Help Coming Soon</div>} />
                   </Routes>

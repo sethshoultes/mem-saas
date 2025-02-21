@@ -5,7 +5,8 @@ import {
   Building2,
   Ticket,
   Receipt,
-  CreditCard,
+  CreditCard, 
+  Lock,
   Settings,
   HelpCircle,
 } from 'lucide-react';
@@ -18,6 +19,7 @@ const navigation = [
   { name: 'Membership', href: '/membership', icon: Ticket },
   { name: 'Subscriptions', href: '/subscriptions', icon: Receipt },
   { name: 'Payments', href: '/payments', icon: CreditCard, badge: 'New' },
+  { name: 'Content Gating', href: '/content-gating', icon: Lock },
   { name: 'Settings', href: '/settings', icon: Settings },
   { name: 'Help', href: '/help', icon: HelpCircle },
 ];
